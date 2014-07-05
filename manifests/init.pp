@@ -2,6 +2,8 @@ class nginx (
     $nginxconfsrc = '/root/etc/nginx/nginx.conf'
 ){
 
+    $nginxconfdir = '/usr/local/etc/nginx/conf.d'
+
     case $::operatingsystem {
         FreeBSD: {
             include pkgng
@@ -31,6 +33,13 @@ class nginx (
         group  => 'wheel',
         source => $nginxconfsrc,
         notify => Service['nginx']
+    }
+
+    file { 'nginx-confd':
+        path   => $nginxconfdir,
+        ensure => directory,
+        owner  => 'root',
+        group  => 'wheel',
     }
 
     service { $servicename:
